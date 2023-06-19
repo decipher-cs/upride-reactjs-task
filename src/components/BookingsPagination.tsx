@@ -1,4 +1,4 @@
-import { Box, Container, List, ListItem, ListItemText, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Container, List, ListItem, ListItemText, Pagination, SxProps, Tab, Tabs } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
 
@@ -18,7 +18,7 @@ const millisecondsToFormattedDate = (milliseconds: number) => {
     return `${month} ${day}, ${year}`
 }
 
-export const BookingsPagination = () => {
+export const BookingsPagination = (props: { sx: SxProps }) => {
     const [totalPages, setTotalPages] = useState(10)
 
     const [currPage, setCurrPage] = useState(1)
@@ -70,7 +70,7 @@ export const BookingsPagination = () => {
     }
 
     return (
-        <Container>
+        <Container sx={props.sx}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs
                     value={currTab}

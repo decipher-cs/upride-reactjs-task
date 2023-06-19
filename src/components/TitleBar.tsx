@@ -1,11 +1,11 @@
-import { Box, Button, Chip, IconButton, InputAdornment, TextField } from '@mui/material'
+import { Box, Button, Chip, IconButton, InputAdornment, SxProps, TextField } from '@mui/material'
 import FaceIcon from '@mui/icons-material/Face'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 
-export const TitleBar = () => {
+export const TitleBar = (props: { sx: SxProps }) => {
     return (
-        <Box>
+        <Box sx={props.sx}>
             <TextField
                 placeholder='Search Bookings'
                 InputProps={{
