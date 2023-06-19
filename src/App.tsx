@@ -8,14 +8,15 @@ const App = () => {
         <Box
             display='flex'
             sx={{
-                border: 'solid red 2px',
+                border: 'solid red 7px',
+                alignItems: 'stretch',
             }}
         >
-            <SidePanel sx={{ height: 'auto', border: 'solid green 3px' }} />
-            <div>
+            <SidePanel sx={{ border: 'solid green 3px', flexBasis: '23%' }} />
+            <Box sx={{ flexBasis: '100%' }}>
                 <TitleBar sx={{ height: 'auto', border: 'solid green 3px' }} />
                 <BookingsPagination sx={{ height: 'auto', border: 'solid green 3px' }} />
-            </div>
+            </Box>
         </Box>
     )
 }
