@@ -143,7 +143,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                   })
                             : bookings
                                   .filter(booking => booking.bookingStatus === currBookingFilter)
-                                  .slice((currPage - 1) * itemsPerPage, (currPage - 1) * itemsPerPage + itemsPerPage)
+                                  .slice(currPage * itemsPerPage - itemsPerPage, currPage * itemsPerPage)
                                   .map((value, i) => {
                                       return (
                                           <TableRow key={i}>

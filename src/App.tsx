@@ -14,8 +14,8 @@ const App = () => {
         >
             <SidePanel sx={{ border: 'solid green 3px', flexBasis: '23%' }} />
             <Box sx={{ flexBasis: '100%' }}>
-                <TitleBar sx={{ height: 'auto', border: 'solid green 3px' }} />
-                <BookingsPagination sx={{ height: 'auto', border: 'solid green 3px' }} />
+                <TitleBar sx={{}}/>
+                <BookingsPagination sx={{ height: 'auto' }} />
             </Box>
         </Box>
     )
