@@ -1,9 +1,5 @@
 import {
     Box,
-    Container,
-    List,
-    ListItem,
-    ListItemText,
     Pagination,
     Paper,
     SxProps,
@@ -12,11 +8,14 @@ import {
     TableBody,
     TableCell,
     TableContainer,
+    TableFooter,
     TableHead,
+    TablePagination,
     TableRow,
     Tabs,
     Typography,
 } from '@mui/material'
+import FaceIcon from '@mui/icons-material/Face'
 import { useEffect, useState } from 'react'
 import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
 
@@ -43,7 +42,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
 
     const [bookings, setBookings] = useState<BookingWithMedium[]>([])
 
-    const [itemsPerPage] = useState(10)
+    const [itemsPerPage, setItemsPerPage] = useState(10)
 
     const [currTab, setCurrTab] = useState<0 | 1 | 2>(0)
 
@@ -90,27 +89,27 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
     return (
         <Box sx={props.sx}>
             <Typography variant='h5'>View Bookings</Typography>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs
-                    value={currTab}
-                    onChange={(_, tab) => {
-                        handleBookingFilter(tab)
-                    }}
-                    aria-label='Booking filter type'
-                >
-                    <Tab label='Active' />
-                    <Tab label='Completed' />
-                    <Tab label='Cancelled' />
-                </Tabs>
-            </Box>
-            <TableContainer>
+            <TableContainer component={Box} sx={{ width: 'fit-content' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs
+                        value={currTab}
+                        onChange={(_, tab) => {
+                            handleBookingFilter(tab)
+                        }}
+                        aria-label='Booking filter type'
+                    >
+                        <Tab label='Active' />
+                        <Tab label='Completed' />
+                        <Tab label='Cancelled' />
+                    </Tabs>
+                </Box>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Package Details</TableCell>
-                            <TableCell>Payment Mode</TableCell>
+                            <TableCell align='center'>Name</TableCell>
+                            <TableCell align='center'>Date</TableCell>
+                            <TableCell align='center'>Package Details</TableCell>
+                            <TableCell align='center'>Payment Mode</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -120,17 +119,32 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                             .map((value, i) => {
                                 return (
                                     <TableRow key={i}>
-                                        <TableCell>{value.clientName}</TableCell>
-                                        <TableCell>{value.date}</TableCell>
-                                        <TableCell>{value.packageID}</TableCell>
-                                        <TableCell>{value.bookingMedium}</TableCell>
+                                        <TableCell align='left'>
+                                            <FaceIcon />
+                                            {value.clientName}
+                                        </TableCell>
+                                        <TableCell align='center'>{value.date}</TableCell>
+                                        <TableCell align='center'>{value.packageTitle}</TableCell>
+                                        <TableCell align='center'>{value.bookingMedium}</TableCell>
                                     </TableRow>
                                 )
                             })}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                page={currPage}
+                                onPageChange={(_, page) => setCurrPage(page)}
+                                rowsPerPage={itemsPerPage}
+                                onRowsPerPageChange={e => setItemsPerPage(parseInt(e.target.value, 10))}
+                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                colSpan={4}
+                                count={bookings.length}
+                            />
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </TableContainer>
-            <Pagination count={totalPages} page={currPage} onChange={(_, page) => setCurrPage(page)} />
         </Box>
     )
 }
