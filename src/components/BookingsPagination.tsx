@@ -1,4 +1,22 @@
-import { Box, Container, List, ListItem, ListItemText, Pagination, SxProps, Tab, Tabs } from '@mui/material'
+import {
+    Box,
+    Container,
+    List,
+    ListItem,
+    ListItemText,
+    Pagination,
+    Paper,
+    SxProps,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Tabs,
+    Typography,
+} from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
 
@@ -10,7 +28,7 @@ interface BookingWithMedium extends Booking {
 const millisecondsToFormattedDate = (milliseconds: number) => {
     // functio to convert time to human readable form.
     // from 743102980 to format -> Oct 26, 2022
-    //
+
     const date = new Date(milliseconds)
     const month = date.toLocaleString('default', { month: 'short' })
     const day = date.toLocaleString('default', { day: 'numeric' })
@@ -70,7 +88,8 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
     }
 
     return (
-        <Container sx={props.sx}>
+        <Box sx={props.sx}>
+            <Typography variant='h5'>View Bookings</Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs
                     value={currTab}
@@ -84,24 +103,34 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                     <Tab label='Cancelled' />
                 </Tabs>
             </Box>
-            <Box>
-                <List>
-                    {bookings
-                        .filter(booking => booking.bookingStatus === currBookingFilter)
-                        .slice((currPage - 1) * itemsPerPage, (currPage - 1) * itemsPerPage + itemsPerPage)
-                        .map((value, i) => {
-                            return (
-                                <ListItem key={i}>
-                                    <ListItemText>{value.clientName}</ListItemText>
-                                    <ListItemText>{value.date}</ListItemText>
-                                    <ListItemText>{value.packageID}</ListItemText>
-                                    <ListItemText>{value.bookingMedium}</ListItemText>
-                                </ListItem>
-                            )
-                        })}
-                </List>
-                <Pagination count={totalPages} page={currPage} onChange={(_, page) => setCurrPage(page)} />
-            </Box>
-        </Container>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Date</TableCell>
+                            <TableCell>Package Details</TableCell>
+                            <TableCell>Payment Mode</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {bookings
+                            .filter(booking => booking.bookingStatus === currBookingFilter)
+                            .slice((currPage - 1) * itemsPerPage, (currPage - 1) * itemsPerPage + itemsPerPage)
+                            .map((value, i) => {
+                                return (
+                                    <TableRow key={i}>
+                                        <TableCell>{value.clientName}</TableCell>
+                                        <TableCell>{value.date}</TableCell>
+                                        <TableCell>{value.packageID}</TableCell>
+                                        <TableCell>{value.bookingMedium}</TableCell>
+                                    </TableRow>
+                                )
+                            })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Pagination count={totalPages} page={currPage} onChange={(_, page) => setCurrPage(page)} />
+        </Box>
     )
 }
