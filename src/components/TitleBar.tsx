@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search'
 
 export const TitleBar = (props: { sx: SxProps }) => {
     return (
-        <Box sx={props.sx}>
+        <Box sx={{ ...props.sx, display: 'flex', flexWrap: 'nowrap' }}>
             <TextField
                 placeholder='Search Bookings'
                 InputProps={{
