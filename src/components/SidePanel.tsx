@@ -1,5 +1,19 @@
-import { Box, SxProps, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
+import {
+    Box,
+    Card,
+    CardActions,
+    CardContent,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    SxProps,
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography,
+} from '@mui/material'
 import React, { useState } from 'react'
+import AttractionsIcon from '@mui/icons-material/Attractions'
+import { Label } from '@mui/icons-material'
 
 export const SidePanel = (props: { sx: SxProps }) => {
     const [selection, setSelection] = useState<string | null>('home')
@@ -10,7 +24,21 @@ export const SidePanel = (props: { sx: SxProps }) => {
 
     return (
         <Box sx={props.sx}>
-            <Typography variant='h5'>Upride</Typography>
+            <Typography variant='h5'>
+                <AttractionsIcon fontSize='medium' />
+                Upride
+            </Typography>
+            <Card raised>
+                <CardContent>
+                    <Typography>Rajarajeswari Nagar</Typography>
+                </CardContent>
+                <CardActions>
+                    <RadioGroup value='0'>
+                        <FormControlLabel value='0' control={<Radio />} label='Branch 2' labelPlacement='start' />
+                        <FormControlLabel value='1' control={<Radio />} label='Branch 3' labelPlacement='start' />
+                    </RadioGroup>
+                </CardActions>
+            </Card>
             <ToggleButtonGroup
                 orientation='vertical'
                 value={selection}
