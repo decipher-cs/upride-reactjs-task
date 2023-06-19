@@ -1,7 +1,9 @@
 import {
+    Avatar,
     Box,
     Pagination,
     Paper,
+    Skeleton,
     SxProps,
     Tab,
     Table,
@@ -15,7 +17,6 @@ import {
     Tabs,
     Typography,
 } from '@mui/material'
-import FaceIcon from '@mui/icons-material/Face'
 import { useEffect, useState } from 'react'
 import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
 
@@ -36,6 +37,8 @@ const millisecondsToFormattedDate = (milliseconds: number) => {
 }
 
 export const BookingsPagination = (props: { sx: SxProps }) => {
+    const [isLoading, setIsLoading] = useState(true)
+
     const [totalPages, setTotalPages] = useState(10)
 
     const [currPage, setCurrPage] = useState(1)
@@ -58,7 +61,6 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
         fetch(URL)
             .then(data => data.json())
             .then((data: OnlineOfflineBookings) => {
-                console.log(data)
                 const allBookings: BookingWithMedium[] = []
 
                 for (const objName in data.offline_bookings) {
@@ -72,6 +74,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                 allBookings.sort((a, b) => a.bookingEpochTime - b.bookingEpochTime)
 
                 setBookings(allBookings)
+                setIsLoading(false)
                 setTotalPages(Math.ceil(allBookings.length / 10))
             })
             .catch(err => {
@@ -103,9 +106,10 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                         <Tab label='Cancelled' />
                     </Tabs>
                 </Box>
-                <Table>
+                <Table size='small'>
                     <TableHead>
                         <TableRow>
+                            <TableCell align='center'></TableCell>
                             <TableCell align='center'>Name</TableCell>
                             <TableCell align='center'>Date</TableCell>
                             <TableCell align='center'>Package Details</TableCell>
@@ -113,22 +117,46 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {bookings
-                            .filter(booking => booking.bookingStatus === currBookingFilter)
-                            .slice((currPage - 1) * itemsPerPage, (currPage - 1) * itemsPerPage + itemsPerPage)
-                            .map((value, i) => {
-                                return (
-                                    <TableRow key={i}>
-                                        <TableCell align='left'>
-                                            <FaceIcon />
-                                            {value.clientName}
-                                        </TableCell>
-                                        <TableCell align='center'>{value.date}</TableCell>
-                                        <TableCell align='center'>{value.packageTitle}</TableCell>
-                                        <TableCell align='center'>{value.bookingMedium}</TableCell>
-                                    </TableRow>
-                                )
-                            })}
+                        {isLoading === true
+                            ? Array(10)
+                                  .fill('')
+                                  .map((_, i) => {
+                                      return (
+                                          <TableRow key={i}>
+                                              <TableCell align='center'>
+                                                  <Skeleton />
+                                              </TableCell>
+                                              <TableCell align='center'>
+                                                  <Skeleton />
+                                              </TableCell>
+                                              <TableCell align='center'>
+                                                  <Skeleton />
+                                              </TableCell>
+                                              <TableCell align='center'>
+                                                  <Skeleton />
+                                              </TableCell>
+                                              <TableCell align='center'>
+                                                  <Skeleton />
+                                              </TableCell>
+                                          </TableRow>
+                                      )
+                                  })
+                            : bookings
+                                  .filter(booking => booking.bookingStatus === currBookingFilter)
+                                  .slice((currPage - 1) * itemsPerPage, (currPage - 1) * itemsPerPage + itemsPerPage)
+                                  .map((value, i) => {
+                                      return (
+                                          <TableRow key={i}>
+                                              <TableCell align='center'>
+                                                  <Avatar />
+                                              </TableCell>
+                                              <TableCell align='center'> {value.clientName} </TableCell>
+                                              <TableCell align='center'>{value.date}</TableCell>
+                                              <TableCell align='center'>{value.packageTitle}</TableCell>
+                                              <TableCell align='center'>{value.bookingMedium}</TableCell>
+                                          </TableRow>
+                                      )
+                                  })}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
