@@ -4,6 +4,18 @@ import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/book
 
 interface BookingWithMedium extends Booking {
     bookingMedium: 'offline' | 'online'
+    date: string
+}
+
+const millisecondsToFormattedDate = (milliseconds: number) => {
+    // functio to convert time to human readable form.
+    // from 743102980 to format -> Oct 26, 2022
+    //
+    const date = new Date(milliseconds)
+    const month = date.toLocaleString('default', { month: 'short' })
+    const day = date.toLocaleString('default', { day: 'numeric' })
+    const year = date.toLocaleString('default', { year: 'numeric' })
+    return `${month} ${day}, ${year}`
 }
 
 export const BookingsPagination = () => {
@@ -13,7 +25,7 @@ export const BookingsPagination = () => {
 
     const [bookings, setBookings] = useState<BookingWithMedium[]>([])
 
-    const [itemsPerPage, setItemsPerPage] = useState(10)
+    const [itemsPerPage] = useState(10)
 
     const [currTab, setCurrTab] = useState<0 | 1 | 2>(0)
 
@@ -33,14 +45,14 @@ export const BookingsPagination = () => {
                 const allBookings: BookingWithMedium[] = []
 
                 for (const objName in data.offline_bookings) {
-                    allBookings.push({ bookingMedium: 'offline', ...data.offline_bookings[objName] })
+                    const date = millisecondsToFormattedDate(data.offline_bookings[objName].bookingEpochTime)
+                    allBookings.push({ bookingMedium: 'offline', ...data.offline_bookings[objName], date })
                 }
                 for (const objName in data.online_bookings) {
-                    allBookings.push({ bookingMedium: 'online', ...data.online_bookings[objName] })
+                    const date = millisecondsToFormattedDate(data.online_bookings[objName].bookingEpochTime)
+                    allBookings.push({ bookingMedium: 'online', ...data.online_bookings[objName], date })
                 }
                 allBookings.sort((a, b) => a.bookingEpochTime - b.bookingEpochTime)
-
-                // TODO: Add a functio to convert time to human readable form.
 
                 setBookings(allBookings)
                 setTotalPages(Math.ceil(allBookings.length / 10))
@@ -81,7 +93,7 @@ export const BookingsPagination = () => {
                             return (
                                 <ListItem key={i}>
                                     <ListItemText>{value.clientName}</ListItemText>
-                                    <ListItemText>{value.bookingEpochTime}</ListItemText>
+                                    <ListItemText>{value.date}</ListItemText>
                                     <ListItemText>{value.packageID}</ListItemText>
                                     <ListItemText>{value.bookingMedium}</ListItemText>
                                 </ListItem>
