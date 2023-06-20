@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BookingWithMedium, OnlineOfflineBookings } from '../types/api/booking'
-import { millisecondsToFormattedDate } from '../utilityFunctions'
+import { millisecondsToFormattedDate } from '../utility/utilityFunctions'
 
 export const useBookingData = () => {
     const [bookings, setBookings] = useState<BookingWithMedium[]>([])
