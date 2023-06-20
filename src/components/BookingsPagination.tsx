@@ -1,7 +1,6 @@
 import {
     Avatar,
     Box,
-    Pagination,
     Paper,
     Skeleton,
     SxProps,
@@ -39,17 +38,19 @@ const millisecondsToFormattedDate = (milliseconds: number) => {
 export const BookingsPagination = (props: { sx: SxProps }) => {
     const [isLoading, setIsLoading] = useState(true)
 
-    const [totalPages, setTotalPages] = useState(10)
-
-    const [currPage, setCurrPage] = useState(1)
-
     const [bookings, setBookings] = useState<BookingWithMedium[]>([])
 
     const [itemsPerPage, setItemsPerPage] = useState(10)
 
+    const [currPage, setCurrPage] = useState(0)
+
     const [currTab, setCurrTab] = useState<0 | 1 | 2>(0)
 
     const [currBookingFilter, setCurrBookingFilter] = useState<BookingStatus>('SUCCESS')
+
+    const totalPages = Math.ceil(
+        bookings.filter(booking => booking.bookingStatus === currBookingFilter).length / itemsPerPage
+    )
 
     useEffect(() => {
         const URL = import.meta.env.VITE_API_URL
@@ -58,6 +59,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
             return
         }
 
+        console.log('run')
         fetch(URL)
             .then(data => data.json())
             .then((data: OnlineOfflineBookings) => {
@@ -75,7 +77,6 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
 
                 setBookings(allBookings)
                 setIsLoading(false)
-                setTotalPages(Math.ceil(allBookings.length / 10))
             })
             .catch(err => {
                 console.log('Error while fetching data:', err)
@@ -92,7 +93,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
     return (
         <Box sx={props.sx}>
             <Typography variant='h5'>View Bookings</Typography>
-            <TableContainer component={Box} sx={{ width: 'fit-content' }}>
+            <TableContainer component={Paper} sx={{ width: 'fit-content' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs
                         value={currTab}
@@ -116,7 +117,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                             <TableCell align='center'>Payment Mode</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody sx={{ maxHeight: '200px', overflow: 'auto' }}>
                         {isLoading === true
                             ? Array(10)
                                   .fill('')
@@ -143,7 +144,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                   })
                             : bookings
                                   .filter(booking => booking.bookingStatus === currBookingFilter)
-                                  .slice(currPage * itemsPerPage - itemsPerPage, currPage * itemsPerPage)
+                                  .slice(currPage * itemsPerPage, currPage * itemsPerPage + itemsPerPage)
                                   .map((value, i) => {
                                       return (
                                           <TableRow key={i}>
@@ -167,7 +168,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                 onRowsPerPageChange={e => setItemsPerPage(parseInt(e.target.value, 10))}
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={4}
-                                count={bookings.length}
+                                count={totalPages ?? 10}
                             />
                         </TableRow>
                     </TableFooter>
