@@ -74,7 +74,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                 display: 'grid',
                 overflow: 'hidden',
                 maxWidth: '70%',
-                gap: 2
+                gap: 2,
             }}
         >
             <Typography variant='h5' pl={1.5} fontWeight='800' sx={{ display: 'flex', gap: 2 }}>
@@ -157,7 +157,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                 onPageChange={(_, page) => setCurrPage(page)}
                                 rowsPerPage={itemsPerPage}
                                 onRowsPerPageChange={e => setItemsPerPage(parseInt(e.target.value, 10))}
-                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                rowsPerPageOptions={[5, 10, 25, 100]}
                                 colSpan={4}
                                 count={totalPages}
                             />
