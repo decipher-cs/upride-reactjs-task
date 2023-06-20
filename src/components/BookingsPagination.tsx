@@ -17,29 +17,36 @@ import {
     Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
+import { BookingWithMedium, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
 import phoneLogo from '../assets/phoneLogo.svg'
 import avatarImg from '../assets/avatarImg.png'
+import { millisecondsToFormattedDate } from '../utilityFunctions'
+import { useBookingData } from '../hooks/useBookingData'
 
-interface BookingWithMedium extends Booking {
-    bookingMedium: 'offline' | 'online'
-    date: string
-}
-
-// functio to convert time to human readable form.
-// from 743102980 to format -> Oct 26, 2022
-const millisecondsToFormattedDate = (milliseconds: number) => {
-    const date = new Date(milliseconds)
-    const month = date.toLocaleString('default', { month: 'short' })
-    const day = date.toLocaleString('default', { day: 'numeric' })
-    const year = date.toLocaleString('default', { year: 'numeric' })
-    return `${month} ${day}, ${year}`
+const LoadingSkeleton = () => {
+    return (
+        <TableRow>
+            <TableCell align='center'>
+                <Skeleton />
+            </TableCell>
+            <TableCell align='center'>
+                <Skeleton />
+            </TableCell>
+            <TableCell align='center'>
+                <Skeleton />
+            </TableCell>
+            <TableCell align='center'>
+                <Skeleton />
+            </TableCell>
+            <TableCell align='center'>
+                <Skeleton />
+            </TableCell>
+        </TableRow>
+    )
 }
 
 export const BookingsPagination = (props: { sx: SxProps }) => {
-    const [isLoading, setIsLoading] = useState(true)
-
-    const [bookings, setBookings] = useState<BookingWithMedium[]>([])
+    const { bookings, isLoading } = useBookingData()
 
     const [itemsPerPage, setItemsPerPage] = useState(10)
 
@@ -53,37 +60,6 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
         bookings.filter(booking => booking.bookingStatus === currBookingFilter).length / itemsPerPage
     )
 
-    useEffect(() => {
-        const URL = import.meta.env.VITE_API_URL
-        if (URL === undefined) {
-            console.log('API URL not set in environment variable.')
-            return
-        }
-
-        console.log('run')
-        fetch(URL)
-            .then(data => data.json())
-            .then((data: OnlineOfflineBookings) => {
-                const allBookings: BookingWithMedium[] = []
-
-                for (const objName in data.offline_bookings) {
-                    const date = millisecondsToFormattedDate(data.offline_bookings[objName].bookingEpochTime)
-                    allBookings.push({ bookingMedium: 'offline', ...data.offline_bookings[objName], date })
-                }
-                for (const objName in data.online_bookings) {
-                    const date = millisecondsToFormattedDate(data.online_bookings[objName].bookingEpochTime)
-                    allBookings.push({ bookingMedium: 'online', ...data.online_bookings[objName], date })
-                }
-                allBookings.sort((a, b) => a.bookingEpochTime - b.bookingEpochTime)
-
-                setBookings(allBookings)
-                setIsLoading(false)
-            })
-            .catch(err => {
-                console.log('Error while fetching data:', err)
-            })
-    }, [])
-
     const handleBookingFilter = (selectedTab: 0 | 1 | 2) => {
         if (selectedTab === 0) setCurrBookingFilter('SUCCESS')
         else if (selectedTab === 1) setCurrBookingFilter('COMPLETED')
@@ -92,13 +68,12 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
     }
 
     return (
-        <Box sx={props.sx}>
-            <Typography variant='h5'>
-                View Bookings
-                <img src={phoneLogo} />
-            </Typography>
-
-            <TableContainer component={Paper} sx={{ width: 'fit-content' }}>
+        <Box sx={{ ...props.sx, p: 4, backgroundColor: 'red' }}>
+            <TableContainer component={Box} sx={{ width: 'fit-content' }}>
+                <Typography variant='h5' pl={1.5} fontWeight='800'>
+                    View Bookings
+                    <img src={phoneLogo} />
+                </Typography>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs
                         value={currTab}
@@ -112,7 +87,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                         <Tab label='Cancelled' />
                     </Tabs>
                 </Box>
-                <Table size='small'>
+                <Table size='small' sx={{ border: 'solid green 4px' }}>
                     <TableHead>
                         <TableRow>
                             <TableCell align='center'></TableCell>
@@ -124,29 +99,9 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                     </TableHead>
                     <TableBody sx={{ maxHeight: '200px', overflow: 'auto' }}>
                         {isLoading === true
-                            ? Array(10)
+                            ? Array(itemsPerPage)
                                   .fill('')
-                                  .map((_, i) => {
-                                      return (
-                                          <TableRow key={i}>
-                                              <TableCell align='center'>
-                                                  <Skeleton />
-                                              </TableCell>
-                                              <TableCell align='center'>
-                                                  <Skeleton />
-                                              </TableCell>
-                                              <TableCell align='center'>
-                                                  <Skeleton />
-                                              </TableCell>
-                                              <TableCell align='center'>
-                                                  <Skeleton />
-                                              </TableCell>
-                                              <TableCell align='center'>
-                                                  <Skeleton />
-                                              </TableCell>
-                                          </TableRow>
-                                      )
-                                  })
+                                  .map((_, i) => <LoadingSkeleton key={i} />)
                             : bookings
                                   .filter(booking => booking.bookingStatus === currBookingFilter)
                                   .slice(currPage * itemsPerPage, currPage * itemsPerPage + itemsPerPage)
@@ -154,12 +109,25 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                       return (
                                           <TableRow key={i}>
                                               <TableCell align='center'>
-                                                  <Avatar src={avatarImg} sx={{height: 24, width: 24}} />
+                                                  <Avatar src={avatarImg} />
                                               </TableCell>
                                               <TableCell align='center'> {value.clientName} </TableCell>
                                               <TableCell align='center'>{value.date}</TableCell>
                                               <TableCell align='center'>{value.packageTitle}</TableCell>
-                                              <TableCell align='center'>{value.bookingMedium}</TableCell>
+                                              <TableCell align='center'>
+                                                  <Paper
+                                                      elevation={0}
+                                                      sx={{
+                                                          backgroundColor:
+                                                              value.bookingMedium === 'online' ? '#35DBA2' : '#FFCA28',
+
+                                                          borderRadius: 17,
+                                                          color: 'white',
+                                                      }}
+                                                  >
+                                                      {value.bookingMedium}
+                                                  </Paper>
+                                              </TableCell>
                                           </TableRow>
                                       )
                                   })}
@@ -173,7 +141,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                 onRowsPerPageChange={e => setItemsPerPage(parseInt(e.target.value, 10))}
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={4}
-                                count={totalPages ?? 10}
+                                count={totalPages}
                             />
                         </TableRow>
                     </TableFooter>
