@@ -37,3 +37,8 @@ export type BookingStatus = 'SUCCESS' | 'CANCELLED' | 'COMPLETED'
 export type RefundStatus = 'REFUND_NOT_APPLICABLE'
 
 export type UserGender = 'Male' | 'Female' | 'M' | 'NA' | 'f'
+
+export interface BookingWithMedium extends Booking {
+    bookingMedium: 'offline' | 'online'
+    date: string
+}
