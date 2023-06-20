@@ -127,9 +127,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                               <TableCell align='center' sx={{ py: 2.4 }}>
                                                   <Avatar src={avatarImg} />
                                               </TableCell>
-                                              <TableCell component='th' scope='row' align='center'>
-                                                  {value.clientName}
-                                              </TableCell>
+                                              <TableCell align='center'>{value.clientName}</TableCell>
                                               <TableCell align='center'>{value.date}</TableCell>
                                               <TableCell align='center'>{value.packageTitle}</TableCell>
                                               <TableCell align='center'>

@@ -34,13 +34,23 @@ export const SidePanel = (props: { sx: SxProps }) => {
             >
                 <img src={uprideLogo} />
                 <Card raised sx={{ borderRadius: '23px' }}>
-                    <CardContent>
-                        <Typography variant='body2'>Rajarajeswari Nagar</Typography>
+                    <CardContent sx={{ px: 2, py: 1 }}>
+                        <Typography fontSize={14}>Rajarajeswari Nagar</Typography>
                     </CardContent>
-                    <CardActions>
+                    <CardActions sx={{ p: 0, justifyContent: 'center' }}>
                         <RadioGroup value='0'>
-                            <FormControlLabel value='0' control={<Radio />} label='Branch 2' labelPlacement='start' />
-                            <FormControlLabel value='1' control={<Radio />} label='Branch 3' labelPlacement='start' />
+                            <FormControlLabel
+                                value='0'
+                                control={<Radio />}
+                                label={<Typography fontSize={12}>Branch 2</Typography>}
+                                labelPlacement='start'
+                            />
+                            <FormControlLabel
+                                value='1'
+                                control={<Radio />}
+                                label={<Typography fontSize={12}>Branch 3</Typography>}
+                                labelPlacement='start'
+                            />
                         </RadioGroup>
                     </CardActions>
                 </Card>
