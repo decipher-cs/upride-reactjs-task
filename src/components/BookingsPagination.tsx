@@ -16,11 +16,10 @@ import {
     Tabs,
     Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { BookingWithMedium, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
+import { useState } from 'react'
+import { BookingStatus } from '../types/api/booking'
 import phoneLogo from '../assets/phoneLogo.svg'
 import avatarImg from '../assets/avatarImg.png'
-import { millisecondsToFormattedDate } from '../utilityFunctions'
 import { useBookingData } from '../hooks/useBookingData'
 
 const LoadingSkeleton = () => {
@@ -68,27 +67,44 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
     }
 
     return (
-        <Box sx={{ ...props.sx, p: 4, backgroundColor: 'red' }}>
-            <TableContainer component={Box} sx={{ width: 'fit-content' }}>
-                <Typography variant='h5' pl={1.5} fontWeight='800'>
-                    View Bookings
-                    <img src={phoneLogo} />
-                </Typography>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs
-                        value={currTab}
-                        onChange={(_, tab) => {
-                            handleBookingFilter(tab)
+        <Box
+            sx={{
+                ...props.sx,
+                p: 4,
+                display: 'grid',
+                overflow: 'hidden',
+                maxWidth: '70%',
+                gap: 2
+            }}
+        >
+            <Typography variant='h5' pl={1.5} fontWeight='800' sx={{ display: 'flex', gap: 2 }}>
+                View Bookings
+                <img src={phoneLogo} />
+            </Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs
+                    value={currTab}
+                    onChange={(_, tab) => {
+                        handleBookingFilter(tab)
+                    }}
+                    aria-label='Booking filter type'
+                >
+                    <Tab label='Active' />
+                    <Tab label='Completed' />
+                    <Tab label='Cancelled' />
+                </Tabs>
+            </Box>
+
+            <TableContainer component={Paper} sx={{ overflowY: 'scroll', borderRadius: '23px' }}>
+                <Table size='small'>
+                    <TableHead
+                        component={Box}
+                        sx={{
+                            boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
+                            borderRadius: '22px 22px 0px 0px',
+                            backgroundColor: '#F1F1F1',
                         }}
-                        aria-label='Booking filter type'
                     >
-                        <Tab label='Active' />
-                        <Tab label='Completed' />
-                        <Tab label='Cancelled' />
-                    </Tabs>
-                </Box>
-                <Table size='small' sx={{ border: 'solid green 4px' }}>
-                    <TableHead>
                         <TableRow>
                             <TableCell align='center'></TableCell>
                             <TableCell align='center'>Name</TableCell>
@@ -97,7 +113,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                             <TableCell align='center'>Payment Mode</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody sx={{ maxHeight: '200px', overflow: 'auto' }}>
+                    <TableBody component={Box} sx={{ maxHeight: '20px', overflow: 'hiddne' }}>
                         {isLoading === true
                             ? Array(itemsPerPage)
                                   .fill('')
@@ -108,10 +124,12 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                   .map((value, i) => {
                                       return (
                                           <TableRow key={i}>
-                                              <TableCell align='center'>
+                                              <TableCell align='center' sx={{ py: 2.4 }}>
                                                   <Avatar src={avatarImg} />
                                               </TableCell>
-                                              <TableCell align='center'> {value.clientName} </TableCell>
+                                              <TableCell component='th' scope='row' align='center'>
+                                                  {value.clientName}
+                                              </TableCell>
                                               <TableCell align='center'>{value.date}</TableCell>
                                               <TableCell align='center'>{value.packageTitle}</TableCell>
                                               <TableCell align='center'>

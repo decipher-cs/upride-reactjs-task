@@ -12,7 +12,6 @@ import {
     Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
-import AttractionsIcon from '@mui/icons-material/Attractions'
 import uprideLogo from '../assets/uprideLogo.svg'
 
 export const SidePanel = (props: { sx: SxProps }) => {
@@ -23,20 +22,31 @@ export const SidePanel = (props: { sx: SxProps }) => {
     }
 
     return (
-        <Box sx={{ ...props.sx, gap: 5, display: 'grid', alignItems: 'center', justifyItems: 'center' }}>
-            <img src={uprideLogo} />
-            <Card raised>
-                <CardContent>
-                    <Typography>Rajarajeswari Nagar</Typography>
-                </CardContent>
-                <CardActions>
-                    <RadioGroup value='0'>
-                        <FormControlLabel value='0' control={<Radio />} label='Branch 2' labelPlacement='start' />
-                        <FormControlLabel value='1' control={<Radio />} label='Branch 3' labelPlacement='start' />
-                    </RadioGroup>
-                </CardActions>
-            </Card>
+        <Box sx={{ ...props.sx }}>
+            <Box
+                sx={{
+                    display: 'grid',
+                    alignItems: 'flex-start',
+                    justifyItems: 'center',
+                    gap: 3,
+                    mt: 2,
+                }}
+            >
+                <img src={uprideLogo} />
+                <Card raised sx={{ borderRadius: '23px' }}>
+                    <CardContent>
+                        <Typography variant='body2'>Rajarajeswari Nagar</Typography>
+                    </CardContent>
+                    <CardActions>
+                        <RadioGroup value='0'>
+                            <FormControlLabel value='0' control={<Radio />} label='Branch 2' labelPlacement='start' />
+                            <FormControlLabel value='1' control={<Radio />} label='Branch 3' labelPlacement='start' />
+                        </RadioGroup>
+                    </CardActions>
+                </Card>
+            </Box>
             <ToggleButtonGroup
+                sx={{ mt: 10 }}
                 orientation='vertical'
                 value={selection}
                 fullWidth
