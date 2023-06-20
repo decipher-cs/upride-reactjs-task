@@ -1,35 +1,12 @@
-import { Box, ThemeOptions, ThemeProvider, createTheme } from '@mui/material'
+import { Box, ThemeProvider } from '@mui/material'
 import { BookingsPagination } from './components/BookingsPagination'
 import { SidePanel } from './components/SidePanel'
 import { TitleBar } from './components/TitleBar'
-import { red } from '@mui/material/colors'
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: red[400],
-        },
-    },
-    components: {
-        MuiTextField: {
-            styleOverrides: {
-                root: {},
-            },
-        },
-        MuiOutlinedInput: {
-            styleOverrides: {
-                root: {
-                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-                    borderRadius: '100px',
-                },
-            },
-        },
-    },
-})
+import { customTheme } from './utility/MuiCustomTheme'
 
 const App = () => {
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={customTheme}>
             <Box display='flex' sx={{ height: '100vh', overflow: 'hidden' }}>
                 <SidePanel
                     sx={{
@@ -38,8 +15,8 @@ const App = () => {
                     }}
                 />
 
-                <Box sx={{ flexBasis: '100%' }}>
-                    <TitleBar sx={{}} />
+                <Box sx={{ flexBasis: '100%', display: 'grid', alignContent: 'flex-start' }}>
+                    <TitleBar sx={{ height: 'fit-content' }} />
                     <BookingsPagination sx={{ height: 'auto' }} />
                 </Box>
             </Box>
