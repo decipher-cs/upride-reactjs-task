@@ -18,16 +18,17 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Booking, BookingStatus, OnlineOfflineBookings } from '../types/api/booking'
+import phoneLogo from '../assets/phoneLogo.svg'
+import avatarImg from '../assets/avatarImg.png'
 
 interface BookingWithMedium extends Booking {
     bookingMedium: 'offline' | 'online'
     date: string
 }
 
+// functio to convert time to human readable form.
+// from 743102980 to format -> Oct 26, 2022
 const millisecondsToFormattedDate = (milliseconds: number) => {
-    // functio to convert time to human readable form.
-    // from 743102980 to format -> Oct 26, 2022
-
     const date = new Date(milliseconds)
     const month = date.toLocaleString('default', { month: 'short' })
     const day = date.toLocaleString('default', { day: 'numeric' })
@@ -92,7 +93,11 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
 
     return (
         <Box sx={props.sx}>
-            <Typography variant='h5'>View Bookings</Typography>
+            <Typography variant='h5'>
+                View Bookings
+                <img src={phoneLogo} />
+            </Typography>
+
             <TableContainer component={Paper} sx={{ width: 'fit-content' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs
@@ -149,7 +154,7 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
                                       return (
                                           <TableRow key={i}>
                                               <TableCell align='center'>
-                                                  <Avatar />
+                                                  <Avatar src={avatarImg} sx={{height: 24, width: 24}} />
                                               </TableCell>
                                               <TableCell align='center'> {value.clientName} </TableCell>
                                               <TableCell align='center'>{value.date}</TableCell>
