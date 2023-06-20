@@ -14,6 +14,15 @@ The webiste is hosted on [netlify](https://monumental-kangaroo-5cb4b4.netlify.ap
 # with yarn
 yarn && yarn dev
 ```
+
+## Credits
+
+- [CSS resets](http://meyerweb.com/eric/tools/css/reset/)
+- JSON to TS with [quicktype.io](https://quicktype.io/typescript)
+- [MUI](https://mui.com/material-ui/)
+- [Vite](https://vitejs.dev/)
+
+
 ## License
 
 [GPL 3.0](./LICENSE)
