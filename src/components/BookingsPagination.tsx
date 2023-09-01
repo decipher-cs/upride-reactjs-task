@@ -16,7 +16,7 @@ import {
     Tabs,
     Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { BookingStatus } from '../types/api/booking'
 import phoneLogo from '../assets/phoneLogo.svg'
 import avatarImg from '../assets/avatarImg.png'
@@ -55,8 +55,9 @@ export const BookingsPagination = (props: { sx: SxProps }) => {
 
     const [currBookingFilter, setCurrBookingFilter] = useState<BookingStatus>('SUCCESS')
 
-    const totalPages = Math.ceil(
-        bookings.filter(booking => booking.bookingStatus === currBookingFilter).length / itemsPerPage
+    const totalPages = useMemo(
+        () => Math.ceil(bookings.filter(booking => booking.bookingStatus === currBookingFilter).length / itemsPerPage),
+        [bookings, currBookingFilter, itemsPerPage]
     )
 
     const handleBookingFilter = (selectedTab: 0 | 1 | 2) => {
